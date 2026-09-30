@@ -26,6 +26,17 @@
   paused before reaching local `libdrm.bst` and `mesa.bst`; interrupted jobs
   exited with signal status 130, while the BuildStream summary reported zero
   genuine fetch or build failures.
+- The resumed full build exposed an execution boundary at `utf-locale.bst`:
+  cross-compilation succeeded, but BuildBox initially advertised only x86
+  ISAs. QEMU static binfmt plus an ARM64 `arch-test` probe now make
+  `buildbox-run --capabilities` advertise `platform:ISA=aarch64`, and the build
+  proceeds through aarch64 SDK execution.
+- `bootstrap/acl.bst` required a provisional staged-junction change that passes
+  `%{build_flags}` through `CFLAGS` and `CXXFLAGS` during its native helper
+  configure step. This must become a durable SDK patch after the active build.
+- The current build has reached 177 of 209 elements, with 76 built and 33 in
+  the remaining build state. It is still running; these figures are a
+  checkpoint, not a successful final result.
 - No extension artifact has yet been built, installed, or published.
 
 ## Known bootstrap gaps
@@ -34,9 +45,11 @@ The source/runtime pinning milestone is complete. Remaining build risks are:
 
 - the lfdevs source's Meson/dependency delta must pass inside the Freedesktop
   26.08 BuildStream sandbox;
-- the inherited Rust source cache must be confirmed sufficient during the
-  first offline-style build;
-- cross-aarch64 cache availability and local build cost are not yet known;
+- the full build must finish and reach the local `libdrm.bst` and `mesa.bst`
+  elements without another cross-execution or dependency failure;
+- the ACL workaround must be represented by a durable, reviewed SDK patch;
+- the cross-aarch64 build has substantial cache/storage cost; final usage and
+  reproducible cleanup guidance are not yet known;
 - no GitHub CI or artifact signing/publishing policy exists yet.
 
 ## Milestones
