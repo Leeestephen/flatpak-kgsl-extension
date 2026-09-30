@@ -78,6 +78,12 @@ This does not disable the local BuildStream cache. Remove the two `--ignore`
 options when useful compatible artifacts have been published to a configured
 remote.
 
+The first run may consume tens of gigabytes while bootstrapping the aarch64
+SDK. It is resumable: BuildStream retains completed source and artifact cache
+entries. An intentional termination can print return code 130 for jobs that
+were in flight; distinguish those signal-induced messages from the final
+pipeline failure count.
+
 The KGSL prefix is kept in the top-level project's `elements/config.yml`.
 Do not patch the equivalent file inside the SDK junction: doing so changes the
 junction identity and invalidates otherwise reusable Freedesktop SDK artifact

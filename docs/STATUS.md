@@ -20,6 +20,12 @@
 - The KGSL install prefix is defined by local `elements/config.yml`; the SDK
   junction is unmodified so official Freedesktop artifact cache keys remain
   reusable.
+- The first sandboxed aarch64 build has validated BuildBox/FUSE/Bubblewrap and
+  completed and cached the x86_64 seed, cross-GCC stages 1 and 2, aarch64
+  glibc, libxcrypt, and related bootstrap artifacts. It was intentionally
+  paused before reaching local `libdrm.bst` and `mesa.bst`; interrupted jobs
+  exited with signal status 130, while the BuildStream summary reported zero
+  genuine fetch or build failures.
 - No extension artifact has yet been built, installed, or published.
 
 ## Known bootstrap gaps
