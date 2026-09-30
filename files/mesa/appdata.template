@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="runtime">
+  <id>__APP_ID__</id>
+  <metadata_license>CC0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>__VARIANT_NAME__</name>
+  <developer id="io.github.Leeestephen">
+    <name>Flatpak KGSL extension contributors</name>
+  </developer>
+  <summary>Mesa KGSL drivers for Android-hosted Linux containers</summary>
+  <releases>
+    <release version="__VERSION__" date="__VERSION_DATE__"/>
+  </releases>
+  <description>
+    <p>
+      This experimental extension contains Mesa Freedreno and Turnip drivers
+      using the Android KGSL kernel interface. It is intended for matching
+      Freedesktop SDK runtimes in Android-hosted Linux containers.
+    </p>
+    __VARIANT_TEXT__
+  </description>
+  <url type="homepage">https://github.com/Leeestephen/flatpak-kgsl-extension</url>
+  <url type="bugtracker">https://github.com/Leeestephen/flatpak-kgsl-extension/issues</url>
+</component>

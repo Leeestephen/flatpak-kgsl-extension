@@ -1,0 +1,18 @@
+From 15b6f80acda94278db3a92db6035f3861b02d15a Mon Sep 17 00:00:00 2001
+From: Seppo Yli-Olli <seppo.yliolli@gmail.com>
+Date: Sat, 27 Mar 2021 17:51:58 +0200
+Subject: [PATCH] Patch Mesa extension prefix to point to KGSL
+
+
+diff --git a/elements/extensions/mesa/config.yml b/elements/extensions/mesa/config.yml
+index a6336699..9d7fa153 100644
+--- a/elements/extensions/mesa/config.yml
++++ b/elements/extensions/mesa/config.yml
+@@ -1,4 +1,4 @@
+ variables:
+-  prefix: "/usr/lib/%{gcc_triplet}/GL/default"
++  prefix: "/usr/lib/%{gcc_triplet}/GL/kgsl"
+   lib: "lib"
+   debugdir: "/usr/lib/debug"
+--
+2.30.2

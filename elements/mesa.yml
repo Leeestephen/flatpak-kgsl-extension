@@ -1,0 +1,139 @@
+build-depends:
+- freedesktop-sdk.bst:bootstrap/sed.bst
+- freedesktop-sdk.bst:components/bison.bst
+- freedesktop-sdk.bst:components/flex.bst
+- freedesktop-sdk.bst:components/llvm.bst
+- freedesktop-sdk.bst:components/python3.bst
+- freedesktop-sdk.bst:components/python3-mako.bst
+- freedesktop-sdk.bst:components/python3-packaging.bst
+- freedesktop-sdk.bst:components/python3-ply.bst
+- freedesktop-sdk.bst:components/python3-pycparser.bst
+- freedesktop-sdk.bst:components/python3-pyyaml.bst
+- freedesktop-sdk.bst:components/rust.bst
+- freedesktop-sdk.bst:components/rust-bindgen.bst
+- freedesktop-sdk.bst:components/rust-cbindgen.bst
+- freedesktop-sdk.bst:components/spirv-llvm-translator.bst
+- freedesktop-sdk.bst:components/spirv-tools.bst
+- freedesktop-sdk.bst:components/vulkan-headers.bst
+- freedesktop-sdk.bst:components/wayland-protocols.bst
+- freedesktop-sdk.bst:components/glslang.bst
+- freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst
+
+depends:
+- freedesktop-sdk.bst:public-stacks/runtime-minimal.bst
+- freedesktop-sdk.bst:components/libdrm.bst
+- freedesktop-sdk.bst:components/libva.bst
+- freedesktop-sdk.bst:components/opencl.bst
+- freedesktop-sdk.bst:components/xorg-lib-x11.bst
+- freedesktop-sdk.bst:components/xorg-lib-xfixes.bst
+- freedesktop-sdk.bst:components/xorg-lib-xrandr.bst
+- freedesktop-sdk.bst:components/xorg-lib-xshmfence.bst
+- freedesktop-sdk.bst:components/xorg-lib-xxf86vm.bst
+- freedesktop-sdk.bst:components/vulkan-icd-loader.bst
+- freedesktop-sdk.bst:components/wayland.bst
+- freedesktop-sdk.bst:components/libglvnd.bst
+- freedesktop-sdk.bst:components/libpng.bst
+- freedesktop-sdk.bst:components/libvdpau.bst
+- freedesktop-sdk.bst:components/libunwind.bst
+- freedesktop-sdk.bst:components/zstd.bst
+- freedesktop-sdk.bst:extensions/mesa/libclc.bst
+- freedesktop-sdk.bst:extensions/mesa/libdrm.bst
+- freedesktop-sdk.bst:extensions/mesa/llvm.bst
+
+(@):
+- freedesktop-sdk.bst:elements/extensions/mesa/config.yml
+- elements/mesa-sources.yml
+
+environment:
+  PKG_CONFIG_PATH: "%{libdir}/pkgconfig:%{datadir}/pkgconfig"
+  CXXFLAGS: "%{target_flags} -std=gnu++17"
+
+variables:
+  intel-rt: "disabled"
+  gallium_drivers: freedreno,softpipe,llvmpipe,zink
+  vulkan_drivers: freedreno,swrast
+  libunwind: disabled
+
+  optimize-debug: "false"
+
+  meson-lto-flags: ''
+  meson-local: >-
+    -Db_ndebug=true
+    -Degl=enabled
+    -Dgallium-drivers=%{gallium_drivers}
+    -Dgallium-rusticl=false
+    -Dgallium-va=enabled
+    -Dgallium-mediafoundation=disabled
+    -Dgbm=enabled
+    -Dgbm-backends-path="/usr/lib/%{gcc_triplet}/GL/lib/gbm"
+    -Dgles1=disabled
+    -Dgles2=enabled
+    -Dglvnd=enabled
+    -Dglx=auto
+    -Dlibunwind=%{libunwind}
+    -Dllvm=enabled
+    -Dlmsensors=disabled
+    -Dmicrosoft-clc=disabled
+    -Dandroid-libbacktrace=disabled
+    -Dplatforms=x11,wayland
+    -Dselinux=false
+    -Dshared-glapi=enabled
+    -Dvalgrind=disabled
+    -Dvulkan-layers=device-select,overlay,intel-nullhw,screenshot,anti-lag
+    -Dvulkan-drivers=%{vulkan_drivers}
+    -Dvulkan-icd-dir="%{libdir}/vulkan/icd.d"
+    -Dxlib-lease=enabled
+    -Dzstd=enabled
+    -Dvideo-codecs=%{video_codecs}
+    -Drust_std=2021
+    -Dintel-rt=%{intel-rt}
+    -Dteflon=true
+    -Damdgpu-virtio=true
+    -Ddisplay-info=disabled
+
+config:
+  install-commands:
+    (>):
+    - |
+      mkdir -p "%{install-root}%{libdir}"
+      mv "%{install-root}%{sysconfdir}/OpenCL" "%{install-root}%{libdir}/"
+      ln -s libEGL_mesa.so.0 %{install-root}%{libdir}/libEGL_indirect.so.0
+      ln -s libGLX_mesa.so.0 %{install-root}%{libdir}/libGLX_indirect.so.0
+      rm -f "%{install-root}%{libdir}"/libGLESv2*
+      rm -f "%{install-root}%{libdir}/libGLX_mesa.so"
+      rm -f "%{install-root}%{libdir}/libEGL_mesa.so"
+      rm -f "%{install-root}%{libdir}/libglapi.so"
+
+    - |
+      if [ -f "%{install-root}%{includedir}/vulkan/vulkan_intel.h" ]; then
+        mkdir -p "%{install-root}%{includedir}/%{gcc_triplet}/vulkan"
+        mv "%{install-root}%{includedir}/vulkan/vulkan_intel.h" "%{install-root}%{includedir}/%{gcc_triplet}/vulkan/"
+      fi
+
+    - |
+      ln -sr '%{install-root}%{datadir}/glvnd' '%{install-root}%{prefix}/glvnd'
+      mkdir -p '%{install-root}%{prefix}/vulkan'
+      ln -sr '%{install-root}%{libdir}/vulkan/icd.d' '%{install-root}%{prefix}/vulkan/icd.d'
+      ln -sr '%{install-root}%{datadir}/vulkan/explicit_layer.d' '%{install-root}%{prefix}/vulkan/explicit_layer.d'
+      ln -sr '%{install-root}%{datadir}/vulkan/implicit_layer.d' '%{install-root}%{prefix}/vulkan/implicit_layer.d'
+      ln -sr '%{install-root}%{libdir}/OpenCL' '%{install-root}%{prefix}/OpenCL'
+      ln -sr '%{install-root}%{libdir}/vdpau' '%{install-root}%{prefix}/vdpau'
+
+    - |
+      DIR="%{install-root}%{project_licensedir}/kgsl"
+      mkdir -p "$DIR"
+      cp -rv licenses/* "$DIR"
+
+public:
+  bst:
+    split-rules:
+      devel:
+        (>):
+        - '%{libdir}/libgbm.so'
+        - '%{libdir}/libglapi.so'
+        - '%{libdir}/libwayland-egl.so'
+        - '%{libdir}/libMesaOpenCL.so'
+        - '%{libdir}/d3d/d3dadapter9.so'
+  cpe:
+    product: mesa
+    vendor: mesa3d
