@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 (@):
-- freedesktop-sdk.bst:elements/extensions/mesa/config.yml
+- elements/config.yml
 - elements/mesa-sources.yml
 
 build-depends:

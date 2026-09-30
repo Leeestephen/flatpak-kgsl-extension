@@ -5,7 +5,7 @@ kind: meson
 description: libdrm
 
 (@):
-- freedesktop-sdk.bst:elements/extensions/mesa/config.yml
+- elements/config.yml
 
 build-depends:
 - freedesktop-sdk.bst:public-stacks/buildsystem-meson.bst

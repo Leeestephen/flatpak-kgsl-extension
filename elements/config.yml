@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: Freedesktop-SDK Developers
+# SPDX-License-Identifier: MIT
+
+variables:
+  prefix: "/usr/lib/%{gcc_triplet}/GL/kgsl"
+  lib: "lib"
+  debugdir: "/usr/lib/debug"
+  debugdatadir: "%{debugdir}%{prefix}"

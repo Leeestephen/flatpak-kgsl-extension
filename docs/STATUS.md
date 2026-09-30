@@ -17,6 +17,9 @@
   `32c5fea70e827885fc805d38a9dc5716c39ed173`; its exported Flatpak branch is
   `26.08`.
 - Targeted source fetches for `mesa.bst` and `libdrm.bst` pass with these pins.
+- The KGSL install prefix is defined by local `elements/config.yml`; the SDK
+  junction is unmodified so official Freedesktop artifact cache keys remain
+  reusable.
 - No extension artifact has yet been built, installed, or published.
 
 ## Known bootstrap gaps

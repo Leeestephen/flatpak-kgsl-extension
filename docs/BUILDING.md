@@ -60,5 +60,28 @@ make build
 make export-repo REPO=repo
 ```
 
+For the initial local build, the Freedesktop project cache was dominated by
+slow negative lookups for this cross-aarch64 configuration. Bypassing both
+project remotes made source acquisition substantially faster:
+
+```sh
+bst --no-colors \
+  -o target_arch aarch64 \
+  -o bootstrap_arch x86_64 \
+  build \
+  --ignore-project-artifact-remotes \
+  --ignore-project-source-remotes \
+  mesa.bst
+```
+
+This does not disable the local BuildStream cache. Remove the two `--ignore`
+options when useful compatible artifacts have been published to a configured
+remote.
+
+The KGSL prefix is kept in the top-level project's `elements/config.yml`.
+Do not patch the equivalent file inside the SDK junction: doing so changes the
+junction identity and invalidates otherwise reusable Freedesktop SDK artifact
+cache keys.
+
 Do not publish the resulting OSTree repository before completing
 `docs/TESTING.md`.

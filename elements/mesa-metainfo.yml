@@ -5,7 +5,7 @@ build-depends:
 - freedesktop-sdk.bst:bootstrap/sed.bst
 
 (@):
-- freedesktop-sdk.bst:elements/extensions/mesa/config.yml
+- elements/config.yml
 - elements/mesa-sources.yml
 
 variables:

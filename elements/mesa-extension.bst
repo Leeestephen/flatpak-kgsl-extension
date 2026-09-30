@@ -5,7 +5,7 @@ build-depends:
 - mesa-metainfo.bst
 
 (@):
-- freedesktop-sdk.bst:elements/extensions/mesa/config.yml
+- elements/config.yml
 
 config:
   include:
