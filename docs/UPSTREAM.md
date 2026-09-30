@@ -16,7 +16,15 @@ The intended Mesa implementation source is:
 
 - Project: `lfdevs/mesa-for-android-container`
 - URL: <https://github.com/lfdevs/mesa-for-android-container>
-- License and source revision: to be recorded when the source pin is selected
+- Source tag: `mesa-26.3.0-devel-20260824`
+- Source commit: `98f3d6229d61452cef80f8563af7c56ae599dc14`
+- Source version observed at runtime: `26.3.0-devel (git-98f3d6229d)`
+- License: Mesa's per-file SPDX licensing, predominantly MIT; the complete
+  source `licenses/` directory is copied into the extension
 
-Do not replace the source URL without recording the exact commit, license,
-patch relationship, and corresponding tested binary version here.
+The matching platform junction is Freedesktop SDK tag
+`freedesktop-sdk-26.08.2`, peeled commit
+`32c5fea70e827885fc805d38a9dc5716c39ed173`.
+
+Do not replace either pin without recording the exact commit, license, patch
+relationship, runtime branch, and corresponding tested binary version here.

@@ -19,8 +19,8 @@ FLATPAK_GL_DRIVERS=kgsl flatpak run APP_ID
 
 This repository is in its bootstrap phase and does **not** yet produce a
 validated KGSL runtime. Its build layout was adapted from freedesktop-sdk's
-`mesa-git-extension`, but the inherited Mesa and SDK source pins still need to
-be replaced with a version-matched KGSL source and Freedesktop 26.08 runtime.
+`mesa-git-extension`; the tested lfdevs Mesa revision and Freedesktop 26.08.2
+SDK are now pinned, but the first sandboxed extension build is still pending.
 
 Do not publish or install artifacts until the milestones in
 [`docs/STATUS.md`](docs/STATUS.md) have passed.
@@ -41,6 +41,7 @@ Flatpak itself.
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — ownership and runtime design
 - [`docs/STATUS.md`](docs/STATUS.md) — current state and next milestones
+- [`docs/BUILDING.md`](docs/BUILDING.md) — host setup and build commands
 - [`docs/TESTING.md`](docs/TESTING.md) — build and acceptance matrix
 - [`docs/UPSTREAM.md`](docs/UPSTREAM.md) — imported template provenance
 

@@ -1,5 +1,11 @@
+# SPDX-FileCopyrightText: Freedesktop-SDK Developers
+# SPDX-License-Identifier: MIT
+
+(@):
+- freedesktop-sdk.bst:elements/extensions/mesa/config.yml
+- elements/mesa-sources.yml
+
 build-depends:
-- freedesktop-sdk.bst:bootstrap/sed.bst
 - freedesktop-sdk.bst:components/bison.bst
 - freedesktop-sdk.bst:components/flex.bst
 - freedesktop-sdk.bst:components/llvm.bst
@@ -32,17 +38,13 @@ depends:
 - freedesktop-sdk.bst:components/vulkan-icd-loader.bst
 - freedesktop-sdk.bst:components/wayland.bst
 - freedesktop-sdk.bst:components/libglvnd.bst
-- freedesktop-sdk.bst:components/libpng.bst
 - freedesktop-sdk.bst:components/libvdpau.bst
+- freedesktop-sdk.bst:components/libpng.bst
 - freedesktop-sdk.bst:components/libunwind.bst
 - freedesktop-sdk.bst:components/zstd.bst
 - freedesktop-sdk.bst:extensions/mesa/libclc.bst
 - freedesktop-sdk.bst:extensions/mesa/libdrm.bst
 - freedesktop-sdk.bst:extensions/mesa/llvm.bst
-
-(@):
-- freedesktop-sdk.bst:elements/extensions/mesa/config.yml
-- elements/mesa-sources.yml
 
 environment:
   PKG_CONFIG_PATH: "%{libdir}/pkgconfig:%{datadir}/pkgconfig"
@@ -50,8 +52,9 @@ environment:
 
 variables:
   intel-rt: "disabled"
-  gallium_drivers: freedreno,softpipe,llvmpipe,zink
-  vulkan_drivers: freedreno,swrast
+  amdgpu-virtio: "false"
+  gallium_drivers: freedreno,zink,virgl,llvmpipe
+  vulkan_drivers: freedreno
   libunwind: disabled
 
   optimize-debug: "false"
@@ -62,25 +65,24 @@ variables:
     -Degl=enabled
     -Dgallium-drivers=%{gallium_drivers}
     -Dgallium-rusticl=false
-    -Dgallium-va=enabled
+    -Dgallium-va=disabled
     -Dgallium-mediafoundation=disabled
     -Dgbm=enabled
     -Dgbm-backends-path="/usr/lib/%{gcc_triplet}/GL/lib/gbm"
     -Dgles1=disabled
     -Dgles2=enabled
     -Dglvnd=enabled
-    -Dglx=auto
+    -Dglx=dri
     -Dlibunwind=%{libunwind}
     -Dllvm=enabled
     -Dlmsensors=disabled
     -Dmicrosoft-clc=disabled
     -Dandroid-libbacktrace=disabled
     -Dplatforms=x11,wayland
-    -Dselinux=false
-    -Dshared-glapi=enabled
     -Dvalgrind=disabled
-    -Dvulkan-layers=device-select,overlay,intel-nullhw,screenshot,anti-lag
+    -Dvulkan-layers=
     -Dvulkan-drivers=%{vulkan_drivers}
+    -Dfreedreno-kmds=kgsl
     -Dvulkan-icd-dir="%{libdir}/vulkan/icd.d"
     -Dxlib-lease=enabled
     -Dzstd=enabled
@@ -88,8 +90,8 @@ variables:
     -Drust_std=2021
     -Dintel-rt=%{intel-rt}
     -Dteflon=true
-    -Damdgpu-virtio=true
     -Ddisplay-info=disabled
+    -Damdgpu-virtio=%{amdgpu-virtio}
 
 config:
   install-commands:
