@@ -1,0 +1,22 @@
+From: ste <ste@localhost>
+Subject: [PATCH] bootstrap/acl: preserve cross build flags for po helper
+
+The configure run used to prepare generated translation files must use the
+same target flags as the element. Without them, an x86-64 bootstrap host can
+produce a helper for the wrong ISA during an aarch64 cross build.
+---
+ elements/bootstrap/acl.bst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/elements/bootstrap/acl.bst b/elements/bootstrap/acl.bst
+--- a/elements/bootstrap/acl.bst
++++ b/elements/bootstrap/acl.bst
+@@ -31,7 +31,7 @@ config:
+     - |
+       mkdir tmp-build
+       cd tmp-build
+-      ../configure
++      CFLAGS="%{build_flags}" CXXFLAGS="%{build_flags}" ../configure
+       cd po
+       make
+       cd ../..

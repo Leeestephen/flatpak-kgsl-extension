@@ -2,6 +2,7 @@ kind: flatpak_image
 
 build-depends:
 - mesa.bst
+- mesa-runtime-deps.bst
 - mesa-metainfo.bst
 
 (@):

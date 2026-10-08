@@ -4,7 +4,7 @@
   <metadata_license>CC0</metadata_license>
   <project_license>MIT</project_license>
   <name>__VARIANT_NAME__</name>
-  <developer id="io.github.Leeestephen">
+  <developer id="io.github.leeestephen">
     <name>Flatpak KGSL extension contributors</name>
   </developer>
   <summary>Mesa KGSL drivers for Android-hosted Linux containers</summary>

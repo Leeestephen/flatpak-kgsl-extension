@@ -2,6 +2,8 @@ build-depends:
 - freedesktop-sdk.bst:components/appstream-minimal.bst
 - freedesktop-sdk.bst:components/_private/git-minimal.bst
 - freedesktop-sdk.bst:components/m4.bst
+- freedesktop-sdk.bst:bootstrap/bash.bst
+- freedesktop-sdk.bst:bootstrap/coreutils.bst
 - freedesktop-sdk.bst:bootstrap/sed.bst
 
 (@):
@@ -19,10 +21,10 @@ config:
     set -e
     appdata_dir=%{install-root}%{datadir}/metainfo
     mkdir -p ${appdata_dir}
-    CURRENT_REF=$(git describe --match *branchpoint*)
-    TIMESTAMP=$(git log -1 --format="%at" ${CURRENT_REF})
+    CURRENT_REF=$(git describe --tags --always)
+    TIMESTAMP=$(git log -1 --format="%at" HEAD)
     VERSION_DATE=$(date -d @"$TIMESTAMP" -Idate)
-    VERSION=$(echo ${CURRENT_REF} | sed 's/mesa-//')
+    VERSION=$(echo ${CURRENT_REF} | sed 's/^mesa-//')
     for app_id in %{app-id}
     do
       m4 -D__VERSION__=${VERSION} -D__VERSION_DATE__=${VERSION_DATE} \

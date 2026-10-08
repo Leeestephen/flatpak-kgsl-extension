@@ -17,13 +17,16 @@ FLATPAK_GL_DRIVERS=kgsl flatpak run APP_ID
 
 ## Status
 
-This repository is in its bootstrap phase and does **not** yet produce a
-validated KGSL runtime. Its build layout was adapted from freedesktop-sdk's
-`mesa-git-extension`; the tested lfdevs Mesa revision and Freedesktop 26.08.2
-SDK are now pinned, but the first sandboxed extension build is still pending.
+The first complete `aarch64/26.08` extension build now passes and exports a
+locally validated OSTree repository containing the release and debug refs.
+The release ref is installed on the alioth Debian acceptance target, and
+Flatpak selects it when `FLATPAK_GL_DRIVERS=kgsl` is present. Ungoogled
+Chromium loads the extension-provided stack, reports hardware-accelerated
+compositing, and has passed local browsing and video-playback acceptance. The
+repository is not yet published.
 
-Do not publish or install artifacts until the milestones in
-[`docs/STATUS.md`](docs/STATUS.md) have passed.
+See [`docs/STATUS.md`](docs/STATUS.md) for the exact artifact keys and remaining
+acceptance work.
 
 ## Scope
 

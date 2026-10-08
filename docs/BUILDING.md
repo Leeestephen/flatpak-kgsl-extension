@@ -3,9 +3,9 @@
 ## Host prerequisites
 
 The current development host is x86-64 Arch Linux. It is verified for project
-resolution, BuildBox sandboxing, and the cross-aarch64 bootstrap. A complete
-local aarch64 Mesa build is still in progress. BuildStream requires
-Bubblewrap, FUSE3, Git, lzip, patch, Python, and three BuildBox tools.
+resolution, BuildBox sandboxing, the cross-aarch64 bootstrap, and a complete
+local aarch64 `mesa.bst` build. BuildStream requires Bubblewrap, FUSE3, Git,
+lzip, patch, Python, and three BuildBox tools.
 
 BuildStream 2.8.1 is installed in an isolated pipx environment. The project
 uses `git_repo` and `cargo2` plugins whose runtime imports are not all declared
@@ -146,11 +146,12 @@ entries. An intentional termination can print return code 130 for jobs that
 were in flight; distinguish those signal-induced messages from the final
 pipeline failure count.
 
-## Provisional Freedesktop SDK ACL workaround
+## Freedesktop SDK ACL cross-build patch
 
 The first full cross build failed in
-`freedesktop-sdk.bst:bootstrap/acl.bst`. The in-progress build was resumed by
-changing its generated staged-junction copy from:
+`freedesktop-sdk.bst:bootstrap/acl.bst`. Its native gettext helper was
+configured without the cross-build flags, so the generated program could not
+run in the build sandbox. The required change is:
 
 ```yaml
 - |
@@ -172,12 +173,12 @@ to:
   make
 ```
 
-Files below `.bst/staged-junctions/` are generated cache state, so this is not
-a repository fix and may disappear when BuildStream restages the junction.
-After the current build finishes, carry the change as a reviewed patch against
-Freedesktop SDK's `elements/bootstrap/acl.bst` (or submit it upstream), then
-revalidate the affected cache keys. Do not edit generated staged-junction
-files as the long-term solution.
+The repository now carries this as
+`patches/freedesktop-sdk/acl-cross-build-flags.patch`, applied by the
+`freedesktop-sdk.bst` junction source. BuildStream has successfully staged the
+patched junction, and the complete extension rebuild is the durability test.
+Files below `.bst/staged-junctions/` remain generated cache state and must not
+be edited as the long-term solution.
 
 The KGSL prefix is kept in the top-level project's `elements/config.yml`.
 Do not patch the equivalent file inside the SDK junction: doing so changes the
@@ -186,3 +187,18 @@ cache keys.
 
 Do not publish the resulting OSTree repository before completing
 `docs/TESTING.md`.
+
+## Runtime dependency composition
+
+The Freedesktop SDK's `extensions/mesa/llvm.bst` helper installs its runtime
+libraries below `GL/default`, even when Mesa itself is configured for the
+custom `GL/kgsl` prefix. Since `mesa-extension.bst` exports only the KGSL
+directory, relying on that helper transitively produces a Gallium library with
+an unresolved `libLLVM.so.22.1` dependency.
+
+`mesa-runtime-deps.bst` stages the cached helper output and copies the versioned
+LLVM runtime library into `GL/kgsl/lib`. It is a direct dependency of the final
+image, so changing this composition layer does not invalidate the expensive
+Mesa compilation artifact. The relocation element disables the inherited
+strip phase because the SDK helper's library is already stripped; this also
+keeps the element independent of the Freedesktop SDK stripper toolchain.

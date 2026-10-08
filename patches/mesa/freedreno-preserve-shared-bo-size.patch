@@ -1,0 +1,42 @@
+From: ste <ste@localhost>
+Subject: [PATCH] freedreno: preserve requested size for shared BOs
+
+Shared BOs are never returned to the reuse cache, but the allocation path
+still rounds them to a cache bucket.  Besides wasting memory, this makes an
+exported dma-buf larger than its externally described image layout.  Some
+Android gralloc importers require those sizes to match exactly.
+
+Bypass cache-bucket selection for FD_BO_SHARED allocations while retaining
+page alignment.
+---
+ src/freedreno/drm/freedreno_bo.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/src/freedreno/drm/freedreno_bo.c b/src/freedreno/drm/freedreno_bo.c
+index 6eda8101e46c..826b370c2033 100644
+--- a/src/freedreno/drm/freedreno_bo.c
++++ b/src/freedreno/drm/freedreno_bo.c
+@@ -137,9 +137,18 @@ bo_new(struct fd_device *dev, uint32_t size, uint32_t flags,
+    if ((flags & FD_BO_CACHED_COHERENT) && !dev->has_cached_coherent)
+       flags &= ~FD_BO_CACHED_COHERENT;
+ 
+-   bo = fd_bo_cache_alloc(cache, &size, flags);
+-   if (bo)
+-      return bo;
++   /* Shared BOs are never returned to the reuse cache, so rounding them to a
++    * cache bucket only wastes memory.  It can also make the exported dma-buf
++    * larger than the externally described image layout, which some importers
++    * reject.  Preserve only the allocator's page-size requirement.
++    */
++   if (flags & FD_BO_SHARED) {
++      size = align(size, os_page_size);
++   } else {
++      bo = fd_bo_cache_alloc(cache, &size, flags);
++      if (bo)
++         return bo;
++   }
+ 
+    bo = dev->funcs->bo_new(dev, size, flags);
+    if (!bo)
+-- 
+2.51.0

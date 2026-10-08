@@ -98,7 +98,9 @@ config:
     (>):
     - |
       mkdir -p "%{install-root}%{libdir}"
-      mv "%{install-root}%{sysconfdir}/OpenCL" "%{install-root}%{libdir}/"
+      if [ -d "%{install-root}%{sysconfdir}/OpenCL" ]; then
+        mv "%{install-root}%{sysconfdir}/OpenCL" "%{install-root}%{libdir}/"
+      fi
       ln -s libEGL_mesa.so.0 %{install-root}%{libdir}/libEGL_indirect.so.0
       ln -s libGLX_mesa.so.0 %{install-root}%{libdir}/libGLX_indirect.so.0
       rm -f "%{install-root}%{libdir}"/libGLESv2*
@@ -118,7 +120,9 @@ config:
       ln -sr '%{install-root}%{libdir}/vulkan/icd.d' '%{install-root}%{prefix}/vulkan/icd.d'
       ln -sr '%{install-root}%{datadir}/vulkan/explicit_layer.d' '%{install-root}%{prefix}/vulkan/explicit_layer.d'
       ln -sr '%{install-root}%{datadir}/vulkan/implicit_layer.d' '%{install-root}%{prefix}/vulkan/implicit_layer.d'
-      ln -sr '%{install-root}%{libdir}/OpenCL' '%{install-root}%{prefix}/OpenCL'
+      if [ -d '%{install-root}%{libdir}/OpenCL' ]; then
+        ln -sr '%{install-root}%{libdir}/OpenCL' '%{install-root}%{prefix}/OpenCL'
+      fi
       ln -sr '%{install-root}%{libdir}/vdpau' '%{install-root}%{prefix}/vdpau'
 
     - |

@@ -5,6 +5,8 @@ sources:
   url: fdsdk_git:freedesktop-sdk.git
   track: freedesktop-sdk-26.08.*
   ref: freedesktop-sdk-26.08.2-0-g32c5fea70e827885fc805d38a9dc5716c39ed173
+- kind: patch
+  path: patches/freedesktop-sdk/acl-cross-build-flags.patch
 
 config:
   options:
