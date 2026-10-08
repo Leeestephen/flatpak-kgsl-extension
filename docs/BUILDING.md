@@ -99,6 +99,39 @@ bst --no-colors \
   show flatpak-repo.bst --format '%{name} %{state}'
 ```
 
+### Recommended 25.08 build command
+
+On the verified 12-core, 30 GiB development host, use two concurrent builders
+with six jobs each. This keeps aggregate compile concurrency near the CPU count
+instead of BuildStream's default potential of four builders with eight jobs
+each. Keep project artifact/source remotes enabled on the first attempt so
+matching 25.08 artifacts can be downloaded when available:
+
+```sh
+bst --no-colors \
+  --builders 2 \
+  --max-jobs 6 \
+  --fetchers 12 \
+  --cache-buildtrees never \
+  -o target_arch aarch64 \
+  -o bootstrap_arch x86_64 \
+  build \
+  --retry-failed \
+  flatpak-repo.bst
+```
+
+The 25.08 and 26.08 branches share BuildStream's global CAS and source cache.
+Do not clean `~/.cache/buildstream` between them. Source downloads and any
+content-addressed objects with matching keys will then be reused. If project
+remote lookups become measurably slow or repeatedly fail, retry with
+`--ignore-project-artifact-remotes --ignore-project-source-remotes`; the local
+cache remains enabled.
+
+Changing the SDK junction necessarily invalidates most 26.08 artifact keys.
+QEMU execution of aarch64 build-time helpers is also still required, so these
+settings reduce avoidable fetching, oversubscription, and build-tree I/O but do
+not make the 25.08 build incremental from the complete 26.08 image.
+
 The Makefile supplies the architecture values, but its convenience targets do
 not yet include the remote-cache bypass or retry options used by the current
 cross build:
@@ -194,7 +227,7 @@ The Freedesktop SDK's `extensions/mesa/llvm.bst` helper installs its runtime
 libraries below `GL/default`, even when Mesa itself is configured for the
 custom `GL/kgsl` prefix. Since `mesa-extension.bst` exports only the KGSL
 directory, relying on that helper transitively produces a Gallium library with
-an unresolved `libLLVM.so.22.1` dependency.
+an unresolved versioned `libLLVM.so` dependency.
 
 `mesa-runtime-deps.bst` stages the cached helper output and copies the versioned
 LLVM runtime library into `GL/kgsl/lib`. It is a direct dependency of the final

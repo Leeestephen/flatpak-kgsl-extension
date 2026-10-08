@@ -5,7 +5,7 @@ graphics, and rollback check below passes.
 
 ## Build checks
 
-- Build `ARCH=aarch64` against the intended Freedesktop `26.08` branch.
+- Build `ARCH=aarch64` against the intended Freedesktop `25.08` branch.
 - Validate that the repository contains only
   `org.freedesktop.Platform.GL.kgsl` and its matching debug ref.
 - Inventory ELF dependencies and reject unresolved or host-only libraries.

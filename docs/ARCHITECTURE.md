@@ -25,8 +25,9 @@ FLATPAK_GL_DRIVERS=kgsl flatpak run APP_ID
 ```
 
 The extension branch must exactly match the application's Freedesktop runtime
-branch. The first target is `aarch64/26.08`, matching the installed Ungoogled
-Chromium runtime.
+branch. This branch targets `aarch64/25.08`, matching the installed VSCodium
+runtime. The independently retained `runtime/26.08` branch matches Ungoogled
+Chromium.
 
 ## Build lineage
 

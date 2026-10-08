@@ -1,6 +1,22 @@
 # Status
 
-## Bootstrap snapshot
+## 25.08 branch
+
+- `runtime/25.08` is derived from the locally accepted 26.08 packaging state.
+- Its SDK junction is pinned to Freedesktop SDK 25.08.17 commit
+  `4535d0fa4894628fdf49999ac5c2aacd138a6035`; the exported Flatpak branch is
+  `25.08`.
+- Its LLVM relocation helper uses 25.08's
+  `public-stacks/runtime-minimal.bst`; 26.08 renamed this dependency to
+  `runtime-gnu.bst`.
+- Its metainfo helper uses 25.08's public `components/git-minimal.bst` path;
+  26.08 moved that element below `components/_private/`.
+- The 25.08 BuildStream pipeline still needs a complete build, repository
+  inspection, installation, and VSCodium acceptance. Artifact keys and release
+  commits recorded below belong to the validated 26.08 baseline and must not be
+  treated as 25.08 artifacts.
+
+## Validated 26.08 baseline
 
 - Repository initialized on 2026-09-30.
 - Build structure imported from `freedesktop-sdk/mesa-git-extension` commit
@@ -13,7 +29,7 @@
 - Mesa is pinned to the tested lfdevs release commit
   `98f3d6229d61452cef80f8563af7c56ae599dc14`
   (`mesa-26.3.0-devel-20260824`).
-- The SDK junction is pinned to Freedesktop SDK 26.08.2 commit
+- The baseline SDK junction was pinned to Freedesktop SDK 26.08.2 commit
   `32c5fea70e827885fc805d38a9dc5716c39ed173`; its exported Flatpak branch is
   `26.08`.
 - Targeted source fetches for `mesa.bst` and `libdrm.bst` pass with these pins.

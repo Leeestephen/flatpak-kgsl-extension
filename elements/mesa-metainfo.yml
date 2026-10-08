@@ -1,6 +1,6 @@
 build-depends:
 - freedesktop-sdk.bst:components/appstream-minimal.bst
-- freedesktop-sdk.bst:components/_private/git-minimal.bst
+- freedesktop-sdk.bst:components/git-minimal.bst
 - freedesktop-sdk.bst:components/m4.bst
 - freedesktop-sdk.bst:bootstrap/bash.bst
 - freedesktop-sdk.bst:bootstrap/coreutils.bst

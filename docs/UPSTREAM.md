@@ -22,9 +22,9 @@ The intended Mesa implementation source is:
 - License: Mesa's per-file SPDX licensing, predominantly MIT; the complete
   source `licenses/` directory is copied into the extension
 
-The matching platform junction is Freedesktop SDK tag
-`freedesktop-sdk-26.08.2`, peeled commit
-`32c5fea70e827885fc805d38a9dc5716c39ed173`.
+The matching platform junction on this branch is Freedesktop SDK tag
+`freedesktop-sdk-25.08.17`, peeled commit
+`4535d0fa4894628fdf49999ac5c2aacd138a6035`.
 
 Do not replace either pin without recording the exact commit, license, patch
 relationship, runtime branch, and corresponding tested binary version here.
