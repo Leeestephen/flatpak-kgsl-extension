@@ -27,6 +27,10 @@ graphics, and rollback check below passes.
 - Vulkan: Turnip Adreno 650 visible through `vulkaninfo --summary`.
 - Ungoogled Chromium: hardware Canvas, compositing, rasterization, OpenGL,
   WebGL, and WebGPU, without GPU-blocklist bypass flags.
+- VSCodium on 25.08: Electron's GPU process must omit `--use-gl=disabled`, map
+  Mesa/LLVM from `GL/kgsl`, open `/dev/kgsl-3d0`, allocate dma-bufs, and render
+  the complete window. The selector-free control must return to `GL/default`
+  and software compositing.
 - LibreWolf is a secondary compatibility check because its own platform policy
   may independently block acceleration.
 - Recheck Anland 200% scaled rendering and ensure the extension does not hide
@@ -39,3 +43,13 @@ graphics, and rollback check below passes.
 - Video playback and ordinary browsing workload.
 - Uninstall the extension or remove `kgsl` from `FLATPAK_GL_DRIVERS`; confirm
   applications return cleanly to the stock runtime without deleting profiles.
+
+## Accepted 25.08 result
+
+The 2026-10-11 alioth run passed the build, repository, dependency, sandbox,
+graphics-provenance, and selector-rollback checks for VSCodium 1.135.06055.
+The installed release commit is
+`34d71b085b2d634f643b1075f0a67e0c9ff0c238bed125bfc8aa854ff39cb9db`.
+The long-duration lifecycle matrix above remains a regression contract for
+future replacement builds rather than a claim that every item was repeated in
+that bounded acceptance run.

@@ -19,11 +19,13 @@ FLATPAK_GL_DRIVERS=kgsl flatpak run APP_ID
 
 The `runtime/25.08` branch targets applications using Freedesktop Platform
 25.08, including the current VSCodium Flatpak. It inherits the locally accepted
-26.08 packaging and KGSL fixes, but its own extension build and application
-acceptance are still pending. The repository is not yet published.
+26.08 packaging and KGSL fixes. Its aarch64 build, repository export, ELF
+closure, side-by-side installation, and VSCodium hardware-acceleration A/B are
+accepted locally on alioth. The repository is not yet published as a signed
+Flatpak remote.
 
-See [`docs/STATUS.md`](docs/STATUS.md) for the exact artifact keys and remaining
-acceptance work.
+See [`docs/STATUS.md`](docs/STATUS.md) for the exact artifact and OSTree keys,
+and [`docs/TESTING.md`](docs/TESTING.md) for the retained acceptance contract.
 
 ## Scope
 

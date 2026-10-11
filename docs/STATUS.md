@@ -11,10 +11,38 @@
   `runtime-gnu.bst`.
 - Its metainfo helper uses 25.08's public `components/git-minimal.bst` path;
   26.08 moved that element below `components/_private/`.
-- The 25.08 BuildStream pipeline still needs a complete build, repository
-  inspection, installation, and VSCodium acceptance. Artifact keys and release
-  commits recorded below belong to the validated 26.08 baseline and must not be
-  treated as 25.08 artifacts.
+- The complete cross-aarch64 graph is cached successfully. Final keys are:
+  - `mesa.bst`:
+    `f39891bf47a5cb095a28cb35b43d443ad0a9893e44dfc772cd3660595ee6ddfa`;
+  - `mesa-runtime-deps.bst`:
+    `dbeef190e09983c8cf9deb3df8e824d337e53bd913329e6cabec95294cda988f`;
+  - `mesa-extension.bst`:
+    `8c1df901b50505c6ea032672a6cb44d35b1c1bff51c36861bcf3e7ef849535b4`;
+  - `flatpak-repo.bst`:
+    `08993a022d9a4ddc74a6e594483ed213c4585badb563cdecd78b5c7b24c53f30`.
+- The exported combined repository passes `ostree fsck` with 10 commits and
+  2,821 objects. Its 25.08 release ref is
+  `34d71b085b2d634f643b1075f0a67e0c9ff0c238bed125bfc8aa854ff39cb9db`;
+  its Debug ref is
+  `97c9eca95fece11ab2bccc09513b8162e62e529092773a58611daac5d4a06de3`.
+- Static inspection confirms an aarch64 Mesa Gallium, Turnip, GBM, EGL, and DRM
+  payload with the exact `libLLVM.so.21.1` dependency required by
+  `libgallium-26.3.0-devel.so`. Both release and Debug refs are consumable by
+  Flatpak without host-library injection.
+- The 25.08 release is installed alongside the accepted 26.08 release rather
+  than replacing it. The 26.08 OSTree commit remains
+  `0195e440a6f3925de11d5ea37971363f0ff59ec821bfa2ed7c3e09bae8ddf0cc`.
+- Flatpak VSCodium 1.135.06055, using
+  `org.freedesktop.Sdk/aarch64/25.08`, passes the live A/B. With
+  `FLATPAK_GL_DRIVERS=kgsl` in Flatpak's parent environment, Electron's GPU
+  process maps Mesa EGL, Gallium, `libLLVM.so.21.1`, GBM, and DRM from
+  `/GL/kgsl/`, opens `/dev/kgsl-3d0`, holds dma-buf and sync-file descriptors,
+  lacks `--use-gl=disabled`, and renders the complete window. Without the
+  selector it maps `/GL/default/`, opens neither KGSL nor dma-bufs, and carries
+  `--use-gl=disabled`.
+- Local 25.08 acceptance completed on 2026-10-11. Publication, signing, and CI
+  remain future delivery work; they are not required for the retained local
+  artifact.
 
 ## Validated 26.08 baseline
 
@@ -148,11 +176,12 @@
 
 ## Known bootstrap gaps
 
-The source/runtime pinning milestone is complete. Remaining build risks are:
+The local build and application-acceptance milestones are complete. Remaining
+delivery risks are:
 
 - the local durable ACL patch still needs an upstream disposition;
-- the cross-aarch64 build has substantial cache/storage cost; final usage and
-  reproducible cleanup guidance are not yet known;
+- the cross-aarch64 build has substantial cache/storage cost and should retain
+  BuildStream's shared CAS between runtime branches;
 - no GitHub CI or artifact signing/publishing policy exists yet.
 
 ## Milestones
